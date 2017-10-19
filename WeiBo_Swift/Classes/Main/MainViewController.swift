@@ -28,18 +28,18 @@ class MainViewController: UITabBarController {
         tabBar.tintColor = UIColor.orange
         //添加子控制器
         addChildViewControllers()
-        //添加加号按钮
-        tabBar.addSubview(composeButton)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //添加加号按钮
+        tabBar.addSubview(composeButton)
         //保存按钮的尺寸
-        let rect = composeButton.frame.size
+        let rect = composeButton.frame;
         //计算宽度
         let width = tabBar.bounds.width/CGFloat(childViewControllers.count)
         //设置按钮位置
         composeButton.frame = CGRect(x:2*width,y:0,width:width,height:rect.height)
-        
+//        composeButton.frame = rect.offsetBy(dx: 2*width, dy: 0);
         
     }
     //MARK: -内部控制方法
@@ -55,11 +55,11 @@ class MainViewController: UITabBarController {
             SLog(message: "加载二进制失败")
             return
         }
-            SLog(message: data)
+//            SLog(message: data)
         do {
             //1.2将json 数据转换为对象(数组字典),首先二进制转换对象不知道是什么对象,所以是 anyobject,所以后面必须指定数组字典
             let objc = try JSONSerialization.jsonObject(with:data as Data, options:JSONSerialization.ReadingOptions.mutableContainers) as! [[String:AnyObject]]
-            SLog(message: objc)
+//            SLog(message: objc)
             for dict in objc {
                 let vcName = dict["vcName"] as? String
                 let title = dict["title"] as? String
@@ -78,7 +78,11 @@ class MainViewController: UITabBarController {
     }
     //添加一个子控制器
     func addChildViewController(childControllerName: String?,title:String?,imageName:String?) {
-        
+        //1.动态获取命名空间
+        /*
+           由于字典/数组只能存储对象,所以通过key从字典取出的值是一个AnyObject类型,如果key值写错或者没有对应的值,那么就取不到值,所以返回值可能有值也可能没值,所以最终的类型是AnyObject?
+         */
+
         guard let name =
             Bundle.main.infoDictionary!["CFBundleExecutable"] as? String else {
             return
@@ -96,6 +100,7 @@ class MainViewController: UITabBarController {
         //1.2设置自控制的相关属性
         let childController = clsType.init()
         childController.title = title
+        
         if let imageN = imageName {
             childController.tabBarItem.image = UIImage.init(named: imageN)
             childController.tabBarItem.selectedImage = UIImage(named:imageN + "_highlighter")
@@ -108,8 +113,12 @@ class MainViewController: UITabBarController {
 
         
     }
+    func compseBtnClick(btn:UIButton) {
+        SLog(message: "点击加号");
+//        SLog(message: btn);
+    }
     //MARK: -懒加载
-    lazy var composeButton:UIButton = {
+   private lazy var composeButton:UIButton = {
         () -> UIButton
         in
         //1.创建按钮
@@ -120,6 +129,11 @@ class MainViewController: UITabBarController {
         //3.设置背景图片
         btn.setBackgroundImage(UIImage.init(named: "tabbar_compose_button"), for: UIControlState.normal)
         btn.setBackgroundImage(UIImage.init(named: "tabbar_compose_button_highlighted"), for: UIControlState.highlighted)
+        //4.调整尺寸
+        btn.sizeToFit();
+        //5.监听按钮点击
+        btn.addTarget(self, action: #selector(compseBtnClick), for: UIControlEvents.touchUpInside);
+        
         return btn
     }()
 }
