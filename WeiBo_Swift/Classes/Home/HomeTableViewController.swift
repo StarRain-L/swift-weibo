@@ -8,88 +8,65 @@
 
 import UIKit
 
-class HomeTableViewController: UITableViewController {
+class HomeTableViewController: BaseTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        //判断用户是否登录
+        if !isLogin {
+            //设置访客视图
+            visitorView?.setupVisitorInfo(imageName: nil, title: "关注一些人,回看这里有什么惊喜")
+        }
+        //2.添加导航条按钮
+        /*
+         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"注册",style:UIBarButtonItemStyle.plain,target:self,action:#selector(registerBtnClick));
+         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"登录",style:UIBarButtonItemStyle.plain,target:self,action:#selector(loginBtnCLick));
+         */
+        //封装UIBarButtonItem方法
+        navigationItem.leftBarButtonItem = UIBarButtonItem(imageName:"navigationbar_friendattention",target:self,action:#selector(leftBtnClick));
+        navigationItem.rightBarButtonItem = UIBarButtonItem(imageName:"navigationbar_pop",target:self,action:#selector(rightBtnClick));
+        //3.导航栏文字
+        let titleButton = TitleButton();
+        titleButton.setTitle("首页", for: UIControlState.normal);
+        titleButton.addTarget(self, action: #selector(titleButtonClick), for: UIControlEvents.touchUpInside);
+        navigationItem.titleView = titleButton;
+        
+    }
+    //MARK:- 内部控制方法
+    @objc private func leftBtnClick(btn:UIButton){
+        SLog(message: "个人中心")
+    }
+    @objc private func rightBtnClick(btn:UIButton){
+        SLog(message: "扫描")
+    }
+    @objc private func titleButtonClick(btn:UIButton){
+        SLog(message: "title点击")
+        //1.修改按钮的状态
+        btn.isSelected = !btn.isSelected;
+        //2.显示菜单
+        //2.1创建菜单
+        let sb = UIStoryboard(name:"Popover",bundle:nil);
+        guard let menuView = sb.instantiateInitialViewController() else {
+            return;
+        }
+        //自定义转场动画
+        //设置转场代理
+        menuView.transitioningDelegate = self
+        // 设置转场动画样式
+        menuView.modalPresentationStyle = UIModalPresentationStyle.custom
+        
+        //2.2弹出菜单
+        present(menuView, animated: true, completion: nil);
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+}
+
+extension HomeTableViewController: UIViewControllerTransitioningDelegate
+{
+    
+    // 该方法用于返回一个负责转场动画的对象
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController?
+    {
+        return wbUIPresentationController(presentedViewController: presented, presenting: presenting)
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
-    }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

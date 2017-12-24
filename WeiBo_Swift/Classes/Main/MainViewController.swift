@@ -10,29 +10,12 @@ import UIKit
 
 class MainViewController: UITabBarController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        //1.添加自控制器
-        /*
-        //1.1创建自控制器
-        let vc = HomeTableViewController()
-        //1.2设置子控制器的相关属性
-        vc.tabBarItem.title = "首页"
-        vc.tabBarItem.image = UIImage.init(named: "")
-        vc.tabBarItem.selectedImage = UIImage(named:"")
-        tabBar.tintColor = UIColor.orange
-        //1.3将自控制器添加到UITabBarController
-        addChildViewController(vc)
-         */
-        //iOS7之后只需要设置tintColor
-        tabBar.tintColor = UIColor.orange
-        //添加子控制器
-        addChildViewControllers()
-    }
+    //MARK: -生命周期方法
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //添加加号按钮
+        //1.添加加号按钮
         tabBar.addSubview(composeButton)
+        //2.设置加号按钮的位置
         //保存按钮的尺寸
         let rect = composeButton.frame;
         //计算宽度
@@ -42,6 +25,8 @@ class MainViewController: UITabBarController {
 //        composeButton.frame = rect.offsetBy(dx: 2*width, dy: 0);
         
     }
+/*
+ storyboard去除
     //MARK: -内部控制方法
     //添加所有的子控制器
     func addChildViewControllers() {
@@ -113,6 +98,7 @@ class MainViewController: UITabBarController {
 
         
     }
+ */
     func compseBtnClick(btn:UIButton) {
         SLog(message: "点击加号");
 //        SLog(message: btn);
@@ -122,15 +108,15 @@ class MainViewController: UITabBarController {
         () -> UIButton
         in
         //1.创建按钮
-        let btn = UIButton()
-        //2.设置前景图片
-        btn.setImage(UIImage.init(named:"tabbar_compose_icon_add"), for: UIControlState.normal)
-        btn.setImage(UIImage.init(named:"tabbar_compose_icon_add_highlighted"), for: UIControlState.highlighted)
-        //3.设置背景图片
-        btn.setBackgroundImage(UIImage.init(named: "tabbar_compose_button"), for: UIControlState.normal)
-        btn.setBackgroundImage(UIImage.init(named: "tabbar_compose_button_highlighted"), for: UIControlState.highlighted)
-        //4.调整尺寸
-        btn.sizeToFit();
+        let btn = UIButton(imageName:"tabbar_compose_icon_add",background:"tabbar_compose_button")
+//        //2.设置前景图片
+//        btn.setImage(UIImage.init(named:"tabbar_compose_icon_add"), for: UIControlState.normal)
+//        btn.setImage(UIImage.init(named:"tabbar_compose_icon_add_highlighted"), for: UIControlState.highlighted)
+//        //3.设置背景图片
+//        btn.setBackgroundImage(UIImage.init(named: "tabbar_compose_button"), for: UIControlState.normal)
+//        btn.setBackgroundImage(UIImage.init(named: "tabbar_compose_button_highlighted"), for: UIControlState.highlighted)
+//        //4.调整尺寸
+//        btn.sizeToFit();
         //5.监听按钮点击
         btn.addTarget(self, action: #selector(compseBtnClick), for: UIControlEvents.touchUpInside);
         

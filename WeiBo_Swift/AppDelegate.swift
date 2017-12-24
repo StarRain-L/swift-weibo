@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        /*
         // Override point for customization after application launch.
         //1. 创建 window
         window = UIWindow(frame:UIScreen.main.bounds)
@@ -23,6 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = MainViewController()
         //3. 显示 window
         window?.makeKeyAndVisible()
+        */
+        //一般情况下设置全局性的属性,最好放在AppDelegate中设置,这样可以保证后续所有的操作都是设置之后的操作
+        UINavigationBar.appearance().tintColor = UIColor.orange;
         return true
     }
 
